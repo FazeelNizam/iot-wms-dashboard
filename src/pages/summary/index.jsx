@@ -21,7 +21,7 @@ const Summary = () => {
       <Box
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="180px"
+        gridAutoRows="170px"
         gap="20px"
       >
         {/* ROW 1 */}

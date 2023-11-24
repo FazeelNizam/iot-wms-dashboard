@@ -1,15 +1,34 @@
-import { ResponsiveLine } from '@nivo/line'
+import React from 'react'
 import { useTheme } from '@mui/material'
+import { ResponsiveBar } from '@nivo/bar'
 import { tokens } from '../../theme'
-import { lineChartData } from '../../data/chartData'
+import { barChartData } from '../../data/chartData'
 
-const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
+const BarChart = () => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
 
   return (
-    <ResponsiveLine
-      data={lineChartData}
+    <ResponsiveBar
+      data={barChartData}
+      keys={[
+        'IOTDev-01',
+        'IOTDev-02',
+        'IOTDev-03',
+        'IOTDev-04',
+        'IOTDev-05',
+        'IOTDev-06',
+        'IOTDev-07',
+        'IOTDev-08',
+        'IOTDev-09',
+      ]}
+      indexBy="name"
+      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+      padding={0.3}
+      groupMode="grouped"
+      valueScale={{ type: 'linear' }}
+      indexScale={{ type: 'band', round: true }}
+      colors={{ scheme: 'nivo' }}
       theme={{
         axis: {
           domain: {
@@ -43,71 +62,66 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
           },
         },
       }}
-      colors={isDashboard ? { datum: 'color' } : { scheme: 'nivo' }}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-      xScale={{ type: 'point' }}
-      xFormat=" >-"
-      yScale={{
-        type: 'linear',
-        min: 'auto',
-        max: 'auto',
-        stacked: true,
-        reverse: false,
+      borderColor={{
+        from: 'color',
+        modifiers: [['darker', 1.6]],
       }}
-      yFormat=" >-.2f"
       axisTop={null}
       axisRight={null}
       axisBottom={{
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'Time',
-        legendOffset: 36,
         legendPosition: 'middle',
+        legendOffset: 32,
+        truncateTickAt: 0,
       }}
       axisLeft={{
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
         legend: 'Count',
-        legendOffset: -40,
         legendPosition: 'middle',
+        legendOffset: -40,
+        truncateTickAt: 0,
       }}
-      pointSize={10}
-      pointColor={{ theme: 'background' }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: 'serieColor' }}
-      pointLabelYOffset={-12}
-      areaOpacity={0.15}
-      useMesh={true}
+      labelSkipWidth={12}
+      labelSkipHeight={12}
+      labelTextColor={{
+        from: 'color',
+        modifiers: [['darker', 1.6]],
+      }}
       legends={[
         {
+          dataFrom: 'keys',
           anchor: 'bottom-right',
           direction: 'column',
           justify: false,
-          translateX: 100,
+          translateX: 120,
           translateY: 0,
-          itemsSpacing: 0,
-          itemDirection: 'left-to-right',
-          itemWidth: 80,
+          itemsSpacing: 2,
+          itemWidth: 100,
           itemHeight: 20,
-          itemOpacity: 0.75,
-          symbolSize: 12,
-          symbolShape: 'circle',
-          symbolBorderColor: 'rgba(0, 0, 0, .5)',
+          itemDirection: 'left-to-right',
+          itemOpacity: 0.85,
+          symbolSize: 20,
           effects: [
             {
               on: 'hover',
               style: {
-                itemBackground: 'rgba(0, 0, 0, .03)',
                 itemOpacity: 1,
               },
             },
           ],
         },
       ]}
+      role="application"
+      ariaLabel="Nivo bar chart demo"
+      barAriaLabel={(e) =>
+        e.id + ': ' + e.formattedValue + ' in country: ' + e.indexValue
+      }
     />
   )
 }
 
-export default LineChart
+export default BarChart

@@ -1,5 +1,12 @@
 import React from 'react'
-import { Box, Typography, Button, useTheme, Tooltip } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Button,
+  useTheme,
+  Tooltip,
+  IconButton,
+} from '@mui/material'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { Link } from 'react-router-dom'
 
@@ -10,7 +17,9 @@ import { mockDataUsers } from '../../data/mockData'
 
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined'
 import AddModeratorOutlinedIcon from '@mui/icons-material/AddModeratorOutlined'
-import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined'
+
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
 const Users = () => {
   const theme = useTheme()
@@ -36,13 +45,6 @@ const Users = () => {
       cellClassName: 'name-column--cell',
     },
     {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      headerAlign: 'left',
-      align: 'left',
-    },
-    {
       field: 'phone',
       headerName: 'Phone Number',
       flex: 1,
@@ -53,35 +55,35 @@ const Users = () => {
       flex: 1,
     },
     {
-      field: 'accessLevel',
-      headerName: 'Access Level',
+      field: 'userType',
+      headerName: 'User Type',
       flex: 1,
-      renderCell: ({ row: { access } }) => {
+      renderCell: ({ row: { userType } }) => {
         return (
           <Box
             p="5px"
             display="flex"
             justifyContent="center"
             backgroundColor={
-              access === 'admin'
+              userType === 'admin'
                 ? colors.greenAccent[600]
                 : colors.greenAccent[700]
             }
             borderRadius="4px"
           >
-            {access === 'admin' && (
+            {userType === 'admin' && (
               <>
                 <AdminPanelSettingsOutlinedIcon />
                 <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-                  {access}
+                  {userType}
                 </Typography>
               </>
             )}
-            {access === 'moderator' && (
+            {userType === 'moderator' && (
               <>
                 <AddModeratorOutlinedIcon />
                 <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-                  {access}
+                  {userType}
                 </Typography>
               </>
             )}
@@ -90,21 +92,29 @@ const Users = () => {
       },
     },
     {
-      field: 'edit',
-      headerName: 'Edit',
+      field: 'action',
+      headerName: 'Action',
       flex: 1,
-      renderCell: ({ row: { access } }) => {
+      renderCell: () => {
         return (
-          <>
-            {access === 'moderator' && (
-              <Button color="error" variant="contained" borderRadius="4px">
-                <SecurityOutlinedIcon />
-                <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-                  Remove
-                </Typography>
-              </Button>
-            )}
-          </>
+          <Box p="5px" display="flex" justifyContent="center" gap="10px">
+            <Tooltip title="View device" arrow>
+              <Link to="/user">
+                <IconButton>
+                  <VisibilityOutlinedIcon fontSize="large" />
+                </IconButton>
+              </Link>
+            </Tooltip>
+
+            <Tooltip title="Remove device" arrow>
+              <IconButton color="error">
+                <DeleteOutlineOutlinedIcon
+                  fontSize="large"
+                  sx={{ color: colors.redAccent[500] }}
+                />
+              </IconButton>
+            </Tooltip>
+          </Box>
         )
       },
     },

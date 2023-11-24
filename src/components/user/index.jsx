@@ -1,41 +1,29 @@
-import React from 'react'
-import {
-  Box,
-  Button,
-  MenuItem,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, MenuItem, TextField, useTheme } from '@mui/material'
+import Header from '../../components/header'
 import { tokens } from '../../theme'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Header from '../header'
-import ProgressCircle from '../progressCircle/ProgressCircle'
-import Device from './device.jpg'
-import styles from './deviceStat.module.css'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import LineChart from '../lineChartDevice'
+import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import styles from './viewUser.module.css'
+import { useParams } from 'react-router-dom'
+import DP from './dp.png'
 
 const checkoutSchema = yup.object().shape({
+  fullName: yup.string().required('Required'),
+  emailAddress: yup.string().email('Invalid email').required('Required'),
+  userType: yup.string().required('Required'),
   status: yup.string().required('Required'),
 })
 
-const DeviceStat = () => {
+const ViewUser = () => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
   const isNonMobile = useMediaQuery('(min-width:600px)')
   const [image, setImage] = useState([])
   const [imageURL, setImageURL] = useState([])
-
-  const initialValues = {
-    status: 'active',
-    userCode: '0001',
-    dateCreated: '21-11-2023',
-    lastUpdate: '21-11-2023',
-  }
+  const [user, setUser] = useState([])
 
   useEffect(() => {
     if (image.length < 1) return
@@ -53,20 +41,19 @@ const DeviceStat = () => {
     // window.location.reload(false)
   }
 
+  const initialValues = {
+    fullName: 'Rossini Frances',
+    emailAddress: 'rossinifrances@gmail.com',
+    userType: 'admin',
+    status: 'active',
+    userCode: 'US0001',
+    dateCreated: '21-11-2023',
+    lastUpdate: '21-11-2023',
+  }
+
   return (
     <Box m="0 32px">
-      <Header title="Device" subtitle="Device status" />
-      <Box display="flex" justifyContent="end">
-        <Button
-          type="submit"
-          size="large"
-          color="secondary"
-          variant="contained"
-        >
-          Get Report
-        </Button>
-      </Box>
-
+      <Header title={'Rossini Frances'} subtitle={'rossinifrances@gmail.com'} />
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
@@ -82,6 +69,7 @@ const DeviceStat = () => {
           handleChange,
           handleBlur,
           handleSubmit,
+          handleReset,
         }) => (
           <form onSubmit={handleSubmit}>
             <Box display="flex" mb="32px">
@@ -97,19 +85,19 @@ const DeviceStat = () => {
                 {image.length < 1 ? (
                   <Box
                     className={styles.imageContainer}
-                    width="250px"
+                    width="150px"
                     height="150px"
                     borderRadius="50%"
                     bgcolor={colors.primary[400]}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <img src={Device} alt="offerImage" />
+                    <img src={DP} alt="offerImage" />
                     {/* 'https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500' */}
                   </Box>
                 ) : (
                   <Box
                     className={styles.imageContainer}
-                    width="250px"
+                    width="150px"
                     height="150px"
                     borderRadius="50%"
                     bgcolor={colors.primary[400]}
@@ -172,6 +160,50 @@ const DeviceStat = () => {
                 helperText={touched.lastUpdate && errors.lastUpdate}
                 sx={{ gridColumn: 'span 1' }}
               />
+
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Full Name"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.fullName || ''}
+                name="fullName"
+                error={!!touched.fullName && !!errors.fullName}
+                helperText={touched.fullName && errors.fullName}
+                sx={{ gridColumn: 'span 4' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.emailAddress || ''}
+                name="emailAddress"
+                error={!!touched.emailAddress && !!errors.emailAddress}
+                helperText={touched.emailAddress && errors.emailAddress}
+                sx={{ gridColumn: 'span 4' }}
+              />
+              <TextField
+                fullWidth
+                select
+                variant="filled"
+                type="text"
+                label="User Type"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.userType || ''}
+                name="userType"
+                error={!!touched.userType && !!errors.userType}
+                helperText={touched.userType && errors.userType}
+                sx={{ gridColumn: 'span 1' }}
+              >
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="moderator">Moderator</MenuItem>
+              </TextField>
               <TextField
                 fullWidth
                 select
@@ -199,64 +231,27 @@ const DeviceStat = () => {
             >
               <Button
                 type="submit"
+                color="error"
+                variant="contained"
+                disabled={!dirty || isSubmitting}
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+              <Button
+                type="submit"
                 color="secondary"
                 variant="contained"
                 disabled={!dirty || isSubmitting}
               >
-                Update Status
+                Update User Details
               </Button>
             </Box>
           </form>
         )}
       </Formik>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        width="100%"
-        backgroundColor={colors.primary[400]}
-        mt="20px"
-        p="15px 20px"
-      >
-        <Box display="flex" height="40vh" width="65vw" flexDirection="column">
-          <Typography variant="h4">Daily Stat</Typography>
-          <LineChart />
-        </Box>
-        <Box
-          width="200px"
-          display="flex"
-          height="100%"
-          flexDirection="column"
-          gap="10px"
-        >
-          <Box
-            display="flex"
-            padding="10px"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-            gap="10px"
-            backgroundColor={colors.primary[600]}
-          >
-            <Typography variant="h4">Battery</Typography>
-            <ProgressCircle progress="0.8" icon="battery" />
-          </Box>
-          <Box
-            display="flex"
-            padding="10px"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-            gap="10px"
-            backgroundColor={colors.primary[600]}
-          >
-            <Typography variant="h4">Item Count</Typography>
-            <ProgressCircle progress="0.4" icon="count" />
-          </Box>
-        </Box>
-      </Box>
     </Box>
   )
 }
 
-export default DeviceStat
+export default ViewUser

@@ -8,7 +8,7 @@ import {
   IconButton,
 } from '@mui/material'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import styles from './devices.module.css'
 import Header from '../../components/header'
@@ -22,6 +22,11 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 const Devices = () => {
   const theme = useTheme()
   const colors = tokens(theme.palette.mode)
+  const navigate = useNavigate()
+
+  const handleProceed = (rowId) => {
+    navigate(`/devices/devicestat/${rowId}`)
+  }
 
   const columns = [
     { field: 'id', headerName: 'ID' },
@@ -44,6 +49,11 @@ const Devices = () => {
       width: 200,
     },
     {
+      field: 'assignedItem',
+      headerName: 'Assigned Item',
+      width: 200,
+    },
+    {
       field: 'weight',
       headerName: 'Weight',
       type: 'number',
@@ -52,8 +62,8 @@ const Devices = () => {
       width: 200,
     },
     {
-      field: 'temp',
-      headerName: 'Temperature',
+      field: 'battery',
+      headerName: 'Battery Percentage',
       width: 200,
     },
     {
@@ -84,12 +94,12 @@ const Devices = () => {
       type: 'actions',
       cellClassName: 'actions',
       flex: 1,
-      renderCell: () => {
+      renderCell: (params) => {
         return (
           <Box p="5px" display="flex" justifyContent="center" gap="10px">
             <Tooltip title="View device" arrow>
               <Link to="/devicestat">
-                <IconButton>
+                <IconButton onClick={() => handleProceed(params.row.id)}>
                   <VisibilityOutlinedIcon fontSize="large" />
                 </IconButton>
               </Link>
@@ -168,6 +178,7 @@ const Devices = () => {
           rows={mockDataDevice}
           columns={columns}
           rowHeight={100}
+          getRowId={(mockDataDevice) => mockDataDevice.id}
         />
       </Box>
     </Box>

@@ -1,7 +1,7 @@
 import { ResponsiveLine } from '@nivo/line'
 import { useTheme } from '@mui/material'
 import { tokens } from '../../theme'
-import { lineChartData } from '../../data/chartData'
+import { lineChartDataDevice } from '../../data/chartData'
 
 const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme()
@@ -9,7 +9,7 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
 
   return (
     <ResponsiveLine
-      data={lineChartData}
+      data={lineChartDataDevice}
       theme={{
         axis: {
           domain: {
@@ -69,7 +69,7 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'Count',
+        legend: 'count',
         legendOffset: -40,
         legendPosition: 'middle',
       }}
@@ -80,6 +80,7 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
       pointLabelYOffset={-12}
       areaOpacity={0.15}
       useMesh={true}
+      enableArea={true}
       legends={[
         {
           anchor: 'bottom-right',

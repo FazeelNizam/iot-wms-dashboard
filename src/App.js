@@ -1,10 +1,10 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import { ColorModeContext, useMode } from './theme'
 import { CssBaseline, ThemeProvider, Typography } from '@mui/material'
 import { Box, Button, TextField, useTheme } from '@mui/material'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { tokens } from '../src/theme'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 
@@ -17,6 +17,7 @@ import Reports from './pages/reports'
 import AddUsers from './pages/addUsers'
 import './index.css'
 import DeviceStat from './components/deviceStat/DeviceStat'
+import User from './components/user'
 import TopBarLoginPage from './pages/global/topbar/TopBarLoginPage'
 import AddDevices from './pages/addDevices'
 
@@ -33,13 +34,20 @@ function App() {
   const [theme, colorMode] = useMode()
   const colors = tokens(theme.palette.mode)
   const [isSidebar, setIsSidebar] = useState(true)
-  const [isAuth, setAuth] = useState(true)
   const isNonMobile = useMediaQuery('(min-width:600px)')
+  const initialAuthState = JSON.parse(localStorage.getItem('isAuth')) || false
+  const [isAuth, setAuth] = useState(initialAuthState)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    localStorage.setItem('isAuth', JSON.stringify(isAuth))
+  }, [isAuth])
 
   const handleFormSubmit = (values) => {
     if (values !== null) {
       console.log(values)
       setAuth(!isAuth)
+      navigate('/')
     }
   }
 
@@ -61,6 +69,7 @@ function App() {
                   <Route path="/addusers" element={<AddUsers />} />
                   <Route path="/adddevice" element={<AddDevices />} />
                   <Route path="/devicestat" element={<DeviceStat />} />
+                  <Route path="/user" element={<User />} />
                 </Routes>
               </main>
             </>
